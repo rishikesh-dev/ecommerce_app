@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "598850982161",
+    "project_id": "rishi-ecommerce-app",
+    "storage_bucket": "rishi-ecommerce-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598850982161:android:b5d38d7c5c5d5a543b7cb0",
+        "android_client_info": {
+          "package_name": "com.example.ecommerce_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3oTKE8WpjHSI0QlirHwd4bhbV553NRKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
