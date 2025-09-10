@@ -1,16 +1,51 @@
-# ecommerce_app
+# 🛍️ E-Commerce App
 
-A new Flutter project.
+A modern **Flutter e-commerce application** built with clean architecture, BLoC state management, and Firebase.  
+The app provides a full shopping experience with cart, checkout, payment integration, and category-based browsing.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+- 📱 **Cross-platform**: Runs on Android & iOS with a single Flutter codebase.
+- 🛒 **Product Management**: Browse products by categories.
+- 🔍 **Search**: Search products instantly with BLoC-powered search.
+- 🛍️ **Cart**: Add, update, and remove products from cart.
+- 🚚 **Checkout**:
+  - Address management (add, update, default).
+  - Order summary and total calculation.
+- 💳 **Payments**:
+  - Cash on Delivery (COD).
+  - Razorpay integration for online payments.
+- 🔔 **Push Notifications** with Firebase Cloud Messaging (FCM).
+- ⚡ **State Management**: Powered by `flutter_bloc`.
+- ☁️ **Backend**: Firebase Authentication & Firestore.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🏗️ Tech Stack
+
+- **Framework**: [Flutter](https://flutter.dev/)
+- **State Management**: [Bloc](https://pub.dev/packages/flutter_bloc)
+- **Backend**: [Firebase Auth](https://firebase.google.com/docs/auth), [Cloud Firestore](https://firebase.google.com/docs/firestore)
+- **Payments**: [Razorpay](https://razorpay.com/docs/payments/payment-gateway/flutter-integration/standard/)
+- **Push Notifications**: [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging)
+
+---
+
+## 📸 Screenshots
+
+| Home | Search | Cart | Checkout |
+|------|--------|------|----------|
+| ![](screenshots/home.png) | ![](screenshots/search.png) | ![](screenshots/cart.png) | ![](screenshots/checkout.png) |
+
+*(Add your own screenshots in the `/screenshots` folder and update paths.)*
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/rishikesh-dev/ecommerce_app.git
+cd ecommerce_app
