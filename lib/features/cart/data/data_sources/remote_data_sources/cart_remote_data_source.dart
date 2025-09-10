@@ -13,11 +13,26 @@ class CartRemoteDataSource {
     ProductModel product,
   ) async {
     try {
-      await firestore
+      final docRef = firestore
           .collection('users')
           .doc(auth.currentUser?.uid)
           .collection('carts')
-          .add(product.toJson());
+          .doc(product.id.toString());
+
+      final docSnapshot = await docRef.get();
+
+      if (docSnapshot.exists) {
+        // Update quantity
+        final existingProduct = ProductModel.fromJson(docSnapshot.data()!);
+        final updatedProduct = existingProduct.copyWith(
+          quantity: existingProduct.quantity + product.quantity,
+        );
+        await docRef.set(updatedProduct.toJson());
+      } else {
+        // Add new product
+        await docRef.set(product.toJson());
+      }
+
       return right([product]);
     } catch (e) {
       return left(Failure(message: e.toString()));
@@ -32,7 +47,7 @@ class CartRemoteDataSource {
           .collection('users')
           .doc(auth.currentUser!.uid)
           .collection('carts')
-          .doc(product.id.toString())
+          .doc('${product.id}')
           .delete();
       return right(product);
     } catch (e) {

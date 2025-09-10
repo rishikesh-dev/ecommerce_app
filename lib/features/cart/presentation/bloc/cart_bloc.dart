@@ -67,5 +67,32 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         }
       });
     });
+    on<IncreaseQuantityEvent>((event, emit) {
+      if (state is CartLoaded) {
+        final currentState = state as CartLoaded;
+        final updatedProducts = currentState.products.map((product) {
+          if (product.id == event.productId) {
+            return product.copyWith(
+              quantity: product.quantity + 1,
+            ); // ✅ increment only this one
+          }
+          return product;
+        }).toList();
+        emit(CartLoaded(products: updatedProducts));
+      }
+    });
+
+    on<DecreaseQuantityEvent>((event, emit) {
+      if (state is CartLoaded) {
+        final currentState = state as CartLoaded;
+        final updatedProducts = currentState.products.map((product) {
+          if (product.id == event.productId && product.quantity > 1) {
+            return product.copyWith(quantity: product.quantity - 1);
+          }
+          return product;
+        }).toList();
+        emit(CartLoaded(products: updatedProducts));
+      }
+    });
   }
 }

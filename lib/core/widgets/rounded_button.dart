@@ -5,12 +5,15 @@ class RoundedButton extends StatelessWidget {
   final Widget? icon;
   final bool isLeft;
   final VoidCallback onPressed;
+  final Color? backgroundColor, foregroundColor;
   const RoundedButton({
     super.key,
     this.isLeft = false,
     required this.title,
     required this.onPressed,
     this.icon,
+    this.backgroundColor,
+    this.foregroundColor,
   });
 
   @override
@@ -19,10 +22,13 @@ class RoundedButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).cardColor,
-          foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+          backgroundColor: backgroundColor ?? Theme.of(context).cardColor,
+          foregroundColor:
+              foregroundColor ?? Theme.of(context).scaffoldBackgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
+            side: BorderSide(color: Theme.of(context).focusColor),
           ),
           padding: const EdgeInsets.symmetric(vertical: 15.0),
         ),

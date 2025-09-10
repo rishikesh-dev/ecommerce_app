@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/alerts/alert.dart';
 import 'package:ecommerce_app/core/constants/constants.dart';
 import 'package:ecommerce_app/core/routes/router_constants.dart';
 import 'package:ecommerce_app/core/widgets/rounded_button.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:toastification/toastification.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -49,12 +51,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthErrorState) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message.message)));
+              alert('Error', state.message.message, ToastificationType.error);
             }
             if (state is Authenticated) {
-              context.goNamed(RouterConstants.homeScreen);
+              context.goNamed(RouterConstants.mainScreen);
             }
           },
           builder: (context, state) {

@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/alerts/alert.dart';
 import 'package:ecommerce_app/core/constants/constants.dart';
 import 'package:ecommerce_app/core/routes/router_constants.dart';
 import 'package:ecommerce_app/core/widgets/rounded_button.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:toastification/toastification.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -49,12 +51,14 @@ class _SignInScreenState extends State<SignInScreen> {
             child: BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthErrorState) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message.message)),
+                  alert(
+                    'Error',
+                    state.message.message,
+                    ToastificationType.error,
                   );
                 }
                 if (state is Authenticated) {
-                  context.pushReplacementNamed(RouterConstants.homeScreen);
+                  context.pushReplacementNamed(RouterConstants.mainScreen);
                 }
               },
               child: SingleChildScrollView(
@@ -185,9 +189,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               TextSpan(
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    context.pushNamed(
-                                      RouterConstants.signupScreen,
-                                    );
+                                    GoRouter.of(context).push('/signup');
                                   },
                                 text: 'Join',
                                 style: TextStyle(

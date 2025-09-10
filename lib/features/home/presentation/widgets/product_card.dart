@@ -40,70 +40,74 @@ class _ProductCardState extends State<ProductCard> {
           pathParameters: {'id': widget.product.id.toString()},
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  width: double.infinity,
-                  height: 220, // fixed height for stability
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
                     width: double.infinity,
-                    height: 220,
-                    color: Colors.grey.shade200,
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    width: double.infinity,
-                    height: 220,
-                    color: Colors.grey.shade200,
-                    child: const Icon(Icons.broken_image, size: 40),
+                    height: 200,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      width: double.infinity,
+                      height: 200,
+                      color: Colors.grey.shade200,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      width: double.infinity,
+                      height: 200,
+                      color: Colors.grey.shade200,
+                      child: const Icon(Icons.broken_image, size: 40),
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: FavButton(
-                  isLiked: isLiked,
-                  onPressed: () {
-                    if (isLiked) {
-                      context.read<SavedBloc>().add(
-                        RemoveSavedItemsEvent(item: widget.product),
-                      );
-                    } else {
-                      context.read<SavedBloc>().add(
-                        AddSavedItemEvent(item: widget.product),
-                      );
-                    }
-                  },
-                  icon: isLiked ? Icons.favorite : LucideIcons.heart,
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: FavButton(
+                    isLiked: isLiked,
+                    onPressed: () {
+                      if (isLiked) {
+                        context.read<SavedBloc>().add(
+                          RemoveSavedItemsEvent(item: widget.product),
+                        );
+                      } else {
+                        context.read<SavedBloc>().add(
+                          AddSavedItemEvent(item: widget.product),
+                        );
+                      }
+                    },
+                    icon: isLiked ? Icons.favorite : LucideIcons.heart,
+                  ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.product.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).cardColor,
               ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            widget.product.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
             ),
-          ),
-          Text(
-            '\$${widget.product.price}',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
+            Text(
+              '\$${widget.product.price}',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).focusColor,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -11,6 +11,8 @@ class AppTheme {
     cardColor: ThemePallete.blackColor,
     hintColor: ThemePallete.whiteColor,
     canvasColor: ThemePallete.redColor,
+
+    highlightColor: Colors.grey.shade200,
     primaryColor: Colors.blue,
     scaffoldBackgroundColor: ThemePallete.whiteColor,
     //Top section

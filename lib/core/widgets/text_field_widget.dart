@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextFieldWidget extends StatefulWidget {
   const TextFieldWidget({
@@ -10,6 +11,10 @@ class TextFieldWidget extends StatefulWidget {
     required this.controller,
     this.validator,
     this.suffixIcon,
+    this.keyboardType = TextInputType.text,
+    this.maxLength,
+    this.inputFormater,
+    this.onChange,
   });
 
   final TextEditingController controller;
@@ -19,6 +24,10 @@ class TextFieldWidget extends StatefulWidget {
   final Widget? suffixIcon;
   final bool obscureText;
   final FormFieldValidator<String>? validator;
+  final TextInputType keyboardType;
+  final int? maxLength;
+  final List<TextInputFormatter>? inputFormater;
+  final Function(String)? onChange;
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -30,7 +39,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   @override
   void initState() {
     super.initState();
-    // Initialize with the widget's default obscureText value
     obscureTextNotifier = ValueNotifier<bool>(widget.obscureText);
   }
 
@@ -46,9 +54,13 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       valueListenable: obscureTextNotifier,
       builder: (context, isObscured, child) {
         return TextFormField(
+          onChanged: widget.onChange,
+          keyboardType: widget.keyboardType,
+          maxLength: widget.maxLength,
           controller: widget.controller,
           obscureText: isObscured,
           validator: widget.validator,
+          inputFormatters: widget.inputFormater,
           decoration: InputDecoration(
             prefixIcon: widget.preffixIcon != null
                 ? Icon(widget.preffixIcon, color: Theme.of(context).focusColor)

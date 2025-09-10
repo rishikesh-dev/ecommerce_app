@@ -19,5 +19,10 @@ class ProductRepositoryImpl implements ProductRepository {
     return remoteDataSource.getProductById(id);
   }
 
-  
+  @override
+  Future<Either<Failure, List<ProductModel>>> fetchProductByCategory(
+    String category,
+  ) {
+    return remoteDataSource.sortByCategory(category);
+  }
 }

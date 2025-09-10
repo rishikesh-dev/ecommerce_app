@@ -4,4 +4,9 @@ part of 'product_bloc.dart';
 sealed class ProductEvent {}
 
 class FetchProductsEvent extends ProductEvent {}
-class FetchCategoriesEvent extends ProductEvent {}
+
+class FetchProductByCategory extends ProductEvent {
+  final String category;
+
+  FetchProductByCategory({required this.category});
+}

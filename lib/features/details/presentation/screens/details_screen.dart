@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/alerts/alert.dart';
 import 'package:ecommerce_app/core/constants/constants.dart';
 import 'package:ecommerce_app/core/widgets/rounded_button.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:ecommerce_app/features/details/presentation/bloc/details_bloc.da
 import 'package:ecommerce_app/features/home/presentation/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toastification/toastification.dart';
 
 class DetailsScreen extends StatefulWidget {
   final int id;
@@ -266,8 +268,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       listener: (context, state) {
                         if (state is CartLoaded) {
                           // Show a snackbar or a message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Item added to cart')),
+                          alert(
+                            'Item added to cart',
+                            '',
+                            ToastificationType.success,
                           );
                         }
                       },

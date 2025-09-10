@@ -8,6 +8,7 @@ class ProductModel extends ProductEntity {
     required super.price,
     required super.thumbnail,
     required super.category,
+    required super.quantity,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -16,8 +17,9 @@ class ProductModel extends ProductEntity {
       title: json['title'] as String,
       description: json['description'] as String,
       price: (json['price'] as num).toDouble(),
-      thumbnail: json['thumbnail'] as String, // 🔥 match toJson key
+      thumbnail: json['thumbnail'] as String,
       category: json['category'] as String,
+      quantity: json['quantity'] ?? 1,
     );
   }
 
@@ -29,6 +31,7 @@ class ProductModel extends ProductEntity {
       price: entity.price,
       thumbnail: entity.thumbnail,
       category: entity.category,
+      quantity: entity.quantity,
     );
   }
 
@@ -40,6 +43,28 @@ class ProductModel extends ProductEntity {
       'price': price,
       'thumbnail': thumbnail,
       'category': category,
+      'quantity': quantity + 1,
     };
+  }
+
+  @override
+  ProductModel copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? category,
+    String? thumbnail,
+    double? price,
+    int? quantity,
+  }) {
+    return ProductModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      thumbnail: thumbnail ?? this.thumbnail,
+      category: category ?? this.category,
+      quantity: quantity ?? this.quantity,
+    );
   }
 }

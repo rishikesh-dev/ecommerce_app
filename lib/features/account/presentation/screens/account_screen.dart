@@ -32,7 +32,7 @@ class AccountScreen extends StatelessWidget {
                   icon: LucideIcons.package,
                   isDivider: false,
                   onTap: () {
-                    // Navigate to profile screen
+                    context.pushNamed(RouterConstants.myOrdersScreen);
                   },
                 ),
                 Divider(
@@ -47,25 +47,18 @@ class AccountScreen extends StatelessWidget {
                   title: 'My Details',
                   icon: LucideIcons.userCog,
                   onTap: () {
-                    // Navigate to orders screen
+                    context.pushNamed(RouterConstants.myDetailsScreen);
                   },
                 ),
                 AccountList(
                   title: 'Address Book',
                   icon: LucideIcons.mapPin,
-                  onTap: () {
-                    // Navigate to settings screen
-                  },
-                ),
-                AccountList(
-                  title: 'Payment Methods',
-                  icon: LucideIcons.creditCard,
                   isDivider: false,
                   onTap: () {
-                    // Navigate to settings screen
+                    context.pushNamed(RouterConstants.myAddressesScreen);
                   },
                 ),
-                k10H,
+
                 Divider(
                   color: Theme.of(context).focusColor.withAlpha(50),
                   height: 10,
@@ -74,19 +67,11 @@ class AccountScreen extends StatelessWidget {
                   endIndent: 0,
                 ),
                 AccountList(
-                  title: 'FAQs',
-                  icon: LucideIcons.circleQuestionMark,
-
-                  onTap: () {
-                    // Navigate to settings screen
-                  },
-                ),
-                AccountList(
                   title: 'Help Center',
                   icon: LucideIcons.headset,
                   isDivider: false,
                   onTap: () {
-                    // Navigate to settings screen
+                    context.pushNamed(RouterConstants.helpCenterScreen);
                   },
                 ),
                 Divider(

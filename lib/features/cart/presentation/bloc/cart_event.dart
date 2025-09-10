@@ -16,3 +16,15 @@ class RemoveFromCartEvent extends CartEvent {
 
   RemoveFromCartEvent({required this.product});
 }
+
+class IncreaseQuantityEvent extends CartEvent {
+  final int productId;
+
+  IncreaseQuantityEvent(this.productId);
+}
+
+class DecreaseQuantityEvent extends CartEvent {
+  final int productId;
+
+  DecreaseQuantityEvent(this.productId);
+}

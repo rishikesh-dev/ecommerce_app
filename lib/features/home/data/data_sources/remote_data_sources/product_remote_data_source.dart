@@ -56,6 +56,29 @@ class ProductRemoteDataSource {
     }
   }
 
+  Future<Either<Failure, List<ProductModel>>> sortByCategory(
+    String category,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/products/category/$category'),
+      );
+      if (response.statusCode != 200) {
+        return left(Failure(message: 'Failed to load product'));
+      }
+      final decoded = jsonDecode(response.body);
+      if (decoded is Map<String, dynamic> && decoded['products'] is List) {
+        final result = (decoded['products'] as List)
+            .map((item) => ProductModel.fromJson(item))
+            .toList();
+        return right(result);
+      }
+      return left(Failure(message: 'Invalid API response format'));
+    } catch (e) {
+      return left(Failure(message: e.toString()));
+    }
+  }
+
   /// Get product by ID
   Future<Either<Failure, ProductModel>> getProductById(String id) async {
     try {

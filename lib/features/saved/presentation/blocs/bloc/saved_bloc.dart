@@ -18,7 +18,6 @@ class SavedBloc extends Bloc<SavedEvent, SavedState> {
     required this.addSavedItemsUseCase,
   }) : super(SavedInitial()) {
     on<GetSavedItemsEvent>((event, emit) async {
-      emit(SavedItemsLoading());
       final result = await getSavedItemsUseCase();
       result.fold(
         (failure) => emit(SavedItemsError(message: failure.message)),

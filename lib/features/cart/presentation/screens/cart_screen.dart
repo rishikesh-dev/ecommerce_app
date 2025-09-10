@@ -1,8 +1,10 @@
+import 'package:ecommerce_app/core/routes/router_constants.dart';
 import 'package:ecommerce_app/core/widgets/rounded_button.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/home/presentation/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CartScreen extends StatefulWidget {
@@ -25,7 +27,7 @@ class _CartScreenState extends State<CartScreen> {
       body: CustomScrollView(
         slivers: [
           AppBarWidget(title: 'Cart', onPressed: () {}, isBottom: false),
-          CheckOut(),
+          SliverToBoxAdapter(child: CheckOut()),
           BlocBuilder<CartBloc, CartState>(
             builder: (context, state) {
               if (state is CartLoading) {
@@ -44,13 +46,19 @@ class _CartScreenState extends State<CartScreen> {
                 );
               }
               if (state is CartLoaded) {
+                final productList = state.products;
+                if (state.products.isEmpty) {
+                  return SliverFillRemaining(
+                    child: Center(child: Text('No Carted item found')),
+                  );
+                }
                 return SliverList.separated(
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                  itemCount: state.products.length,
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 10);
+                  },
+                  itemCount: productList.length,
                   itemBuilder: (ctx, index) {
-                    final product = state.products[index];
-
+                    final product = productList[index];
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -97,7 +105,7 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   ),
                                   Text(
-                                    'Size: ',
+                                    'Category: ${product.category}',
                                     style: TextStyle(
                                       color: Colors.grey.shade600,
                                       fontSize: 14,
@@ -126,19 +134,28 @@ class _CartScreenState extends State<CartScreen> {
                                     color: Colors.red,
                                   ),
                                   onPressed: () {
-                                    
+                                    context.read<CartBloc>().add(
+                                      RemoveFromCartEvent(product: product),
+                                    );
                                   },
                                 ),
-                                const SizedBox(
-                                  height: 30,
-                                ), // ✅ replaces `spacing: 30`
+                                const SizedBox(height: 30),
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     _QuantityButton(
                                       icon: Icons.remove,
                                       onPressed: () {
-                                       
+                                        if (product.quantity <= 1) {
+                                          context.read<CartBloc>().add(
+                                            RemoveFromCartEvent(
+                                              product: product,
+                                            ),
+                                          );
+                                        }
+                                        context.read<CartBloc>().add(
+                                          DecreaseQuantityEvent(product.id),
+                                        );
                                       },
                                     ),
                                     Padding(
@@ -146,14 +163,16 @@ class _CartScreenState extends State<CartScreen> {
                                         horizontal: 8.0,
                                       ),
                                       child: Text(
-                                        '',
+                                        product.quantity.toString(),
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                     ),
                                     _QuantityButton(
                                       icon: Icons.add,
                                       onPressed: () {
-                                      
+                                        context.read<CartBloc>().add(
+                                          IncreaseQuantityEvent(product.id),
+                                        );
                                       },
                                     ),
                                   ],
@@ -167,7 +186,9 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 );
               }
-              return SliverToBoxAdapter(child: SizedBox());
+              return SliverFillRemaining(
+                child: Center(child: Text('No Item found')),
+              );
             },
           ),
         ],
@@ -181,103 +202,137 @@ class CheckOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: IntrinsicHeight(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            spacing: 10,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state is CartLoaded && state.products.isNotEmpty) {
+          // ✅ Calculate subtotal properly
+          double subtotal = state.products.fold(
+            0,
+            (sum, product) => sum + (product.price * product.quantity),
+          );
+
+          // ✅ Safer shipping fee condition
+          double shippingFee = 0;
+          if (subtotal <= 100) {
+            shippingFee = 10; // example condition
+          }
+          if (subtotal == 0) {
+            shippingFee = 0;
+          }
+
+          // ✅ Total calculation
+          double total = subtotal + shippingFee;
+          double vat = total * 0.15;
+          return IntrinsicHeight(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                spacing: 10,
                 children: [
-                  Text(
-                    'Sub-total',
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Theme.of(context).focusColor,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Sub-total',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Theme.of(context).focusColor,
+                        ),
+                      ),
+                      Text(
+                        '\$ ${subtotal.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).cardColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '\$ 5,870',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).cardColor,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'VAT(%)',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Theme.of(context).focusColor,
+                        ),
+                      ),
+                      Text(
+                        '\$ ${vat.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).cardColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Shipping fee',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Theme.of(context).focusColor,
+                        ),
+                      ),
+                      Text(
+                        '\$ $shippingFee',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).cardColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Theme.of(context).focusColor,
+                        ),
+                      ),
+                      Text(
+                        '\$ ${(total).toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).cardColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  RoundedButton(
+                    title: 'Go to Checkout',
+                    icon: Icon(LucideIcons.arrowRight400, size: 30),
+                    onPressed: () {
+                      context.pushNamed(
+                        RouterConstants.checkOutScreen,
+                        extra: {
+                          'subtotal': subtotal,
+                          'vat': vat,
+                          'shippingFee': shippingFee,
+                          'total': total,
+                          'products': state.products,
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'VAT(%)',
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Theme.of(context).focusColor,
-                    ),
-                  ),
-                  Text(
-                    '\$ 0.00',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).cardColor,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Shipping fee',
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Theme.of(context).focusColor,
-                    ),
-                  ),
-                  Text(
-                    '\$ 80',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).cardColor,
-                    ),
-                  ),
-                ],
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total',
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Theme.of(context).focusColor,
-                    ),
-                  ),
-                  Text(
-                    '\$ 5,950',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).cardColor,
-                    ),
-                  ),
-                ],
-              ),
-              RoundedButton(
-                title: 'Go to Checkout',
-                icon: Icon(LucideIcons.arrowRight400, size: 30),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+        return SizedBox();
+      },
     );
   }
 }

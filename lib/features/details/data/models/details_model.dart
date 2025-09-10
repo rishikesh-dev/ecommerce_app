@@ -23,6 +23,7 @@ class DetailsModel extends DetailsEntity {
     required super.minimumOrderQuantity,
     required super.images,
     required super.thumbnail,
+    required super.quantity,
   });
 
   factory DetailsModel.fromJson(Map<String, dynamic> json) {
@@ -50,6 +51,7 @@ class DetailsModel extends DetailsEntity {
       minimumOrderQuantity: json['minimumOrderQuantity'] ?? 0,
       images: List<String>.from(json['images'] ?? []),
       thumbnail: json['thumbnail'] ?? '',
+      quantity: json['quantity'] ?? 0,
     );
   }
 
@@ -80,6 +82,7 @@ class DetailsModel extends DetailsEntity {
       'minimumOrderQuantity': minimumOrderQuantity,
       'images': images,
       'thumbnail': thumbnail,
+      'quantity': quantity,
     };
   }
 }

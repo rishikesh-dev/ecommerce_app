@@ -11,4 +11,12 @@ class AuthModel extends AuthEntity {
   Map<String, dynamic> toJson() {
     return {'id': id, 'email': email, 'fullName': fullName};
   }
+
+  AuthModel copyWith({String? id, String? email, String? fullName}) {
+    return AuthModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      fullName: fullName ?? this.fullName,
+    );
+  }
 }

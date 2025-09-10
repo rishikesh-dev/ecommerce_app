@@ -4,12 +4,13 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AppBarWidget extends StatelessWidget {
   final String title;
-  final bool isFilter, isBottom;
+  final bool isFilter, isBottom, needAction;
   final VoidCallback onPressed;
   final TextEditingController? controller;
   final Widget? suffixIcon;
   const AppBarWidget({
     this.isBottom = true,
+    this.needAction = true,
     this.controller,
     super.key,
     required this.title,
@@ -27,7 +28,6 @@ class AppBarWidget extends StatelessWidget {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
       ),
       centerTitle: false,
-      actions: [IconButton(onPressed: () {}, icon: Icon(LucideIcons.bell))],
       bottom: isBottom
           ? PreferredSize(
               preferredSize: const Size.fromHeight(50),
@@ -44,33 +44,19 @@ class AppBarWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 10),
-                    isFilter
-                        ? IconButton.filled(
-                            onPressed: () => onPressed(),
-                            style: IconButton.styleFrom(
-                              backgroundColor: Theme.of(context).cardColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            icon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(LucideIcons.slidersVertical),
-                            ),
-                          )
-                        : IconButton.filled(
-                            onPressed: () => onPressed(),
-                            style: IconButton.styleFrom(
-                              backgroundColor: Theme.of(context).cardColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            icon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(LucideIcons.search),
-                            ),
-                          ),
+                    IconButton.filled(
+                      onPressed: onPressed,
+                      style: IconButton.styleFrom(
+                        backgroundColor: Theme.of(context).cardColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      icon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(LucideIcons.search),
+                      ),
+                    ),
                   ],
                 ),
               ),
